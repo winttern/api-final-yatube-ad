@@ -16,6 +16,15 @@ class Post(models.Model):
         return self.text
 
 
+class Group(models.Model):  # Не забудь про модель Group, если она есть в ТЗ
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.title
+
+
 class Comment(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='comments')
@@ -25,16 +34,17 @@ class Comment(models.Model):
     created = models.DateTimeField(
         'Дата добавления', auto_now_add=True, db_index=True)
 
+
 class Follow(models.Model):
     user = models.ForeignKey(
-        User, 
-        on_delete=models.CASCADE, 
+        User,
+        on_delete=models.CASCADE,
         related_name='follower',
         verbose_name='Подписчик'
     )
     following = models.ForeignKey(
-        User, 
-        on_delete=models.CASCADE, 
+        User,
+        on_delete=models.CASCADE,
         related_name='following',
         verbose_name='Автор'
     )
@@ -42,7 +52,7 @@ class Follow(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'following'], 
+                fields=['user', 'following'],
                 name='unique_follow'
             )
         ]
